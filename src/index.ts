@@ -1,11 +1,16 @@
 import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
 import cors from "cors";
+import User from "./models/User";
+import Room from "./models/Room";
+import Booking from "./models/Booking";
+
+import sequelize from "./config/database";
 
 dotenv.config();
 const app: Express = express();
 const PORT = process.env.PORT || 3000;
-
+const models = { User, Room, Booking };
 app.use(cors());
 app.use(express.json());
 app.use((req: Request, res: Response, next) => {
@@ -28,6 +33,15 @@ app.use((err: any, req: Request, res: Response, next: any) => {
     error: err.message || "Internal Server Error",
   });
 });
+sequelize;
+sequelize
+  .sync({ force: true })
+  .then(() => {
+    console.log("Database synced!");
+  })
+  .catch((err) => {
+    console.error("Database sync error:", err);
+  });
 app.listen(PORT, () => {
   console.log(`Server is run on http://localhost:${PORT}`);
   console.log(`Press Ctrl+C to stop`);
