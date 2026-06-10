@@ -7,6 +7,7 @@ import Booking from "./models/Booking";
 
 import sequelize from "./config/database";
 import authRoutes from "./routes/auth";
+import roomRoutes from "./routes/rooms";
 dotenv.config();
 const app: Express = express();
 const PORT = process.env.PORT || 3000;
@@ -14,6 +15,7 @@ const models = { User, Room, Booking };
 app.use(cors());
 app.use(express.json());
 app.use("/auth", authRoutes);
+app.use("/rooms", roomRoutes);
 app.use((req: Request, res: Response, next) => {
   console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
   next();
