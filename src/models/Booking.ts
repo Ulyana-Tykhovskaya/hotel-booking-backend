@@ -1,7 +1,19 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../config/database";
 
-class Booking extends Model {}
+class Booking extends Model {
+  public id!: number;
+  public user_id!: number;
+  public room_id!: number;
+  public check_in!: Date;
+  public check_out!: Date;
+  public adults!: number;
+  public children!: number;
+  public total_amount!: number;
+  public status!: string;
+  public createdAt!: Date;
+  public updatedAt!: Date;
+}
 
 Booking.init(
   {
