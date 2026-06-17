@@ -5,8 +5,9 @@ import {
   createBookingSchema,
   updateBookingSchema,
 } from "../validators/bookingValidator";
+import { authMiddleware } from "../middleware/authMiddleware";
 const router = Router();
-router.get("/", async (req: Request, res: Response) => {
+router.get("/", authMiddleware, async (req: Request, res: Response) => {
   try {
     const bookings = await Booking.findAll({
       include: [
@@ -24,7 +25,7 @@ router.get("/", async (req: Request, res: Response) => {
   }
 });
 
-router.get("/:id", async (req: Request, res: Response) => {
+router.get("/:id", authMiddleware, async (req: Request, res: Response) => {
   try {
     const id = parseInt(req.params.id as string, 10);
     const booking = await Booking.findByPk(id, {
@@ -48,6 +49,7 @@ router.get("/:id", async (req: Request, res: Response) => {
 
 router.post(
   "/",
+  authMiddleware,
   validateRequest(createBookingSchema),
   async (req: Request, res: Response) => {
     try {
@@ -105,6 +107,7 @@ router.post(
 );
 router.put(
   "/:id",
+  authMiddleware,
   validateRequest(updateBookingSchema),
   async (req: Request, res: Response) => {
     try {
@@ -154,7 +157,7 @@ router.put(
     }
   },
 );
-router.delete("/:id", async (req: Request, res: Response) => {
+router.delete("/:id", authMiddleware, async (req: Request, res: Response) => {
   try {
     const id = parseInt(req.params.id as string, 10);
     const booking = await Booking.findByPk(id);

@@ -5,6 +5,7 @@ import {
   createRoomSchema,
   updateRoomSchema,
 } from "../validators/roomValidator";
+import { authMiddleware } from "../middleware/authMiddleware";
 const router = Router();
 
 router.get("/", async (req: Request, res: Response) => {
@@ -35,6 +36,7 @@ router.get("/:id", async (req: Request, res: Response) => {
 
 router.post(
   "/",
+  authMiddleware,
   validateRequest(createRoomSchema),
   async (req: Request, res: Response) => {
     try {
@@ -72,6 +74,7 @@ router.post(
 
 router.put(
   "/:id",
+  authMiddleware,
   validateRequest(updateRoomSchema),
   async (req: Request, res: Response) => {
     try {

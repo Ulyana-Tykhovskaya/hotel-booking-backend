@@ -37,7 +37,7 @@ app.use((err: any, req: Request, res: Response, next: any) => {
 });
 sequelize;
 sequelize
-  .sync({ force: true })
+  .sync({ alter: true })
   .then(() => {
     console.log("Database synced!");
   })
