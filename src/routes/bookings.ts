@@ -63,22 +63,15 @@ router.post(
         total_amount,
         status,
       } = req.body as any;
-      if (
-        !user_id ||
-        !room_id ||
-        !check_in ||
-        !check_out ||
-        !adults ||
-        !total_amount
-      ) {
-        return res
-          .status(400)
-          .json({ error: "All required fields must be provided" });
+      if (!user_id || !room_id || !check_in || !check_out || !total_amount) {
+        return res.status(400).json({ error: "Missing required fields" });
       }
-      if (new Date(check_out) <= new Date(check_in)) {
+      const checkInDate = new Date(check_in);
+      const checkOutDate = new Date(check_out);
+      if (checkOutDate <= checkInDate) {
         return res
           .status(400)
-          .json({ error: "Check-out date must be after check-in date" });
+          .json({ error: "Check-out must be after check-in" });
       }
       const user = await User.findByPk(user_id);
       if (!user) {
@@ -88,20 +81,27 @@ router.post(
       if (!room) {
         return res.status(404).json({ error: "Room not found" });
       }
+      const totalPeople = adults + (children || 0);
+      if (totalPeople > room.capacity) {
+        return res.status(400).json({
+          error: `Room capacity is ${room.capacity}, but you requested ${totalPeople} people`,
+        });
+      }
       const booking = await Booking.create({
         user_id,
         room_id,
-        check_in,
-        check_out,
+        check_in: checkInDate,
+        check_out: checkOutDate,
         adults,
-        children: children ?? 0,
+        children: children || 0,
         total_amount,
-        status: status ?? "pending",
+        status: status || "pending",
       });
+
       res.status(201).json(booking);
     } catch (error) {
-      console.error("Created booking error:", error);
-      res.status(500).json({ error: "Internal server error" });
+      console.error("Booking creation error:", error);
+      res.status(500).json({ error: "Failed to create booking" });
     }
   },
 );

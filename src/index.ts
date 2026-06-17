@@ -1,3 +1,4 @@
+import { errorHandler } from "./middleware/errorHandler";
 import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
 import cors from "cors";
@@ -43,6 +44,10 @@ sequelize
   })
   .catch((err) => {
     console.error("Database sync error:", err);
+  });
+  app.use(errorHandler);
+  app.listen(PORT, () => {
+    console.log(`Server is run on http://localhost:${PORT}`);
   });
 app.listen(PORT, () => {
   console.log(`Server is run on http://localhost:${PORT}`);
