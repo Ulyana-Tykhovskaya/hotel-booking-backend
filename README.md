@@ -23,26 +23,6 @@ npm run build   # Build
 npm start       # Production
 ```
 
-## API Endpoints
-
-- `GET /health` - Проверить что сервер живой
-- `GET /` - Главная страница
-
-### Coming Soon
-
-- Auth endpoints (неделя 3)
-- Rooms CRUD (неделя 4)
-- Bookings CRUD (неделя 4)
-
-## Project Status
-
-Week 1: Express server ready
-Week 2: Database & Models
-Week 3: Authentication
-Week 4: CRUD endpoints
-Week 5: Deploy
-Week 6: Job search
-
 ## Author
 
 Tikhovskaya Ulyana
