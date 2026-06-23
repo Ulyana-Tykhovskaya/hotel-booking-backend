@@ -11,12 +11,8 @@ dotenv.config();
 
 const app: Express = express();
 const PORT = process.env.PORT || 3000;
-
-// Middleware
 app.use(cors());
 app.use(express.json());
-
-// Health check
 app.get("/", (req: Request, res: Response) => {
   res.json({
     message: "Hotel Booking API is running!",
@@ -28,24 +24,28 @@ app.get("/", (req: Request, res: Response) => {
 app.get("/health", (req: Request, res: Response) => {
   res.json({ status: "OK" });
 });
-
-// Routes
 app.use("/auth", authRoutes);
 app.use("/rooms", roomRoutes);
 app.use("/bookings", bookingRoutes);
 
-// Error handling
 app.use(errorHandler);
 
-// Database sync & start
-sequelize
-  .sync({ alter: true })
-  .then(() => {
-    console.log(" Database synced!");
-    app.listen(PORT, () => {
-      console.log(` Server running on port ${PORT}`);
+if (process.env.NODE_ENV !== "production") {
+  sequelize
+    .sync({ alter: true })
+    .then(() => {
+      console.log("Database synced!");
+      app.listen(PORT, () => {
+        console.log(`Server running on port ${PORT}`);
+      });
+    })
+    .catch((err) => {
+      console.error("Database sync error:", err);
     });
-  })
-  .catch((err) => {
-    console.error(" Database sync error:", err);
+} else {
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
   });
+}
+
+export default app;
